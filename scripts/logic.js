@@ -19,13 +19,13 @@ function getResult(id) {
   const { minScreen, maxScreen } = form.dataset
   const fontMin = form['min'].value
   const fontMax = form['max'].value
+  if (fontMax === "" || fontMin === "") return
   console.group('advancedClamp');
   console.log(`advancedClamp(${minScreen}, ${maxScreen}, ${fontMin}, ${fontMax})`);
   const result = advancedClamp(minScreen, maxScreen, fontMin, fontMax)
   console.log(result)
   console.groupEnd();
   drawResult(id, result)
-  copyResult(id)
 }
 
 //*======================== Обработка Enter по кнопке
