@@ -19,10 +19,10 @@ function getResult(id) {
   const { minScreen, maxScreen } = form.dataset
   const fontMin = form['min'].value
   const fontMax = form['max'].value
-  if (fontMax === "" || fontMin === "") return
   console.group('advancedClamp');
   console.log(`advancedClamp(${minScreen}, ${maxScreen}, ${fontMin}, ${fontMax})`);
   let result = advancedClamp(minScreen, maxScreen, fontMin, fontMax)
+  if (fontMax === "" || fontMin === "") `Тут будет результат`
   if (fontMax === fontMin) result = `${fontMin}px`
   console.log(result)
 
