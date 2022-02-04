@@ -22,7 +22,7 @@ function getResult(id) {
   console.group('advancedClamp');
   console.log(`advancedClamp(${minScreen}, ${maxScreen}, ${fontMin}, ${fontMax})`);
   let result = advancedClamp(minScreen, maxScreen, fontMin, fontMax)
-  if (fontMax === "" || fontMin === "") `Тут будет результат`
+  if (fontMax === "" || fontMin === "") result = `Тут будет результат`
   if (fontMax === fontMin) result = `${fontMin}px`
   console.log(result)
 
