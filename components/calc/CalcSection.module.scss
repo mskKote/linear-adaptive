@@ -1,0 +1,82 @@
+.calc {
+  border-radius: 5px;
+  font-size    : 1.25rem;
+}
+
+.inputs {
+  display    : flex;
+  align-items: center;
+  gap        : 1.5rem;
+
+  input {
+    line-height : 2;
+    font-size   : 0.9rem;
+    padding-left: 1.5ch;
+
+    &:focus-visible {
+      filter       : saturate(1.5);
+      outline-color: blueviolet;
+    }
+  }
+}
+
+.description {
+  display    : flex;
+  align-items: center;
+  margin     : 0;
+  margin-left: 1.5rem;
+  width      : 15%;
+}
+
+.result {
+  display      : flex;
+  height       : 3rem;
+  cursor       : pointer;
+  border-radius: 5px;
+
+  &:hover {
+    filter: brightness(0.95);
+  }
+
+  pre {
+    margin: 0;
+    height: 3rem;
+  }
+
+  code {
+    display      : flex !important;
+    align-items  : center;
+    height       : 3rem;
+    padding      : 3px 1rem !important;
+    box-sizing   : border-box;
+    border-radius: 5px 0 0 5px;
+    border-left  : black 1px solid;
+    font-size    : 0.9rem;
+  }
+}
+
+button.copy {
+  cursor       : pointer;
+  line-height  : 1;
+  font-size    : 1.25rem;
+  padding-left : 8px;
+  border       : none;
+  border-radius: 0 5% 5% 0;
+  outline      : 1px solid;
+
+  &:hover {
+    filter: brightness(0.95);
+  }
+
+  &:focus {
+    background-color: blueviolet;
+    filter          : saturate(1.5);
+    box-shadow      : 0 0 10px 1px blueviolet;
+  }
+}
+
+.breakpoint {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-around;
+}
