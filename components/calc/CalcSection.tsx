@@ -50,7 +50,7 @@ export default ({ calc, updateCalc }: Props) => {
   }
 
   //*---------------------------- Логика таблицы
-  const TableHead = () => <tr>
+  const tableHead = () => <tr>
     <th>Переменная</th>
     {breakpoints.map(({ X, Y }, i: number) =>
       <th key={i}>
@@ -62,7 +62,7 @@ export default ({ calc, updateCalc }: Props) => {
     <th>Действия</th>
   </tr>
 
-  const TableRow = () => <>
+  const tableRow = () => <>
     {revertValues.map(({ variableName, breakpoints }, i: number) =>
       <tr key={i}>
         {/* Название переменной */}
@@ -91,7 +91,7 @@ export default ({ calc, updateCalc }: Props) => {
       </tr>)}
   </>
 
-  const TableFoot = () => <tr>
+  const tableFoot = () => <tr>
     <td>
       <button
         disabled={variables.filter(x => x === "").length > 0}
@@ -103,15 +103,9 @@ export default ({ calc, updateCalc }: Props) => {
 
   return (<section>
     <table className={styles.calc}>
-      <thead>
-        <TableHead />
-      </thead>
-      <tbody>
-        <TableRow />
-      </tbody>
-      <tfoot>
-        <TableFoot />
-      </tfoot>
+      <thead>{tableHead()}</thead>
+      <tbody>{tableRow()}</tbody>
+      <tfoot>{tableFoot()}</tfoot>
     </table>
   </section>)
 }

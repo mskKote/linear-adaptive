@@ -4,19 +4,7 @@ import ResultSection from '../components/result/ResultSection'
 import CalcSection from '../components/calc/CalcSection';
 import Calc from '../core/Calc';
 
-// function getSizes(sizes) {
-//   const result = []
-//   for (let i = 0; i < sizes.length - 1; i++) {
-//     result.push({
-//       min: sizes[i],
-//       max: sizes[i + 1] - 1
-//     })
-//   }
-//   return result
-// }
-
-
-let reloads = 0
+// let reloads = 0
 
 const defaultCalc = new Calc()
   .addBreakpoint({ X: 375, Y: 0 })
@@ -39,17 +27,17 @@ export default () => {
     updateCalc(calc)
   }
   useEffect(() => {
-    reloads++;
-    console.groupCollapsed('calc');
-    console.table(calc.breakpoints)
-    console.log(calc.variables)
-    console.table(calc.values.map(({ breakpoint, variables }) => ({
-      ...breakpoint,
-      variable: variables[0].variable,
-      value: variables[0].value
-    })))
-    console.log(...calc);
-    console.groupEnd();
+    // reloads++;
+    // console.groupCollapsed('calc');
+    // console.table(calc.breakpoints)
+    // console.log(calc.variables)
+    // console.table(calc.values.map(({ breakpoint, variables }) => ({
+    //   ...breakpoint,
+    //   variable: variables[0].variable,
+    //   value: variables[0].value
+    // })))
+    // console.log(...calc);
+    // console.groupEnd();
   }, [calc])
   //* Определение размеров через URL
   // useEffect(() => {
@@ -68,8 +56,7 @@ export default () => {
     <header>
       <h1>MVP калькулятор для адаптива 🦥</h1>
     </header>
-    <Child calc={calc} redraw={redraw} />
-    <button onClick={redraw}>reloads: {reloads}</button>
+    {/* <button onClick={redraw}>reloads: {reloads}</button> */}
     <main>
       <CalcSection calc={calc} updateCalc={updateCalc} />
       <ResultSection breakpoints={calc.breakpoints} />
@@ -79,13 +66,4 @@ export default () => {
       <a href="https://vk.com/mskkote">По всем вопросам к автору</a>
     </footer>
   </>
-}
-
-const Child = ({ calc, redraw }) => {
-  return <>{calc.values.map((x, i: number) =>
-    <input key={i}
-      onChange={() => redraw()}
-      defaultValue={x.variables[0].variable}
-      placeholder={x.variables[0].variable} />)
-  }</>
 }
