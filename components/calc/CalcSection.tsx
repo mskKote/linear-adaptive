@@ -2,14 +2,6 @@ import React from 'react';
 import Calc from '../../core/Calc';
 import styles from './CalcSection.module.scss'
 
-//*======================== Формула
-function advancedClamp(screenMin, screenMax, fontMin, fontMax) {
-  const vw_max = screenMax / 100
-  const vw_min = screenMin / 100
-  const M = (fontMax - fontMin) / (vw_max - vw_min)
-  const N = fontMax - M * vw_max
-  return `clamp(${fontMin}px, ${Math.round(N * 100) / 100}px + ${Math.round(M * 100) / 100}vw, ${fontMax}px)`
-}
 
 type Props = {
   calc: Calc
@@ -70,7 +62,8 @@ export default ({ calc, updateCalc }: Props) => {
           <input
             placeholder='переменная'
             value={variableName}
-            onInput={({ currentTarget }) => calcAction(calcActions.changeVariable, variableName, currentTarget.value)} />
+            onInput={({ currentTarget }) =>
+              calcAction(calcActions.changeVariable, variableName, currentTarget.value)} />
         </td>
         {/* Позиции для переменной */}
         {breakpoints.map(({ breakpoint, value }, td_i: number) =>
@@ -79,9 +72,8 @@ export default ({ calc, updateCalc }: Props) => {
               placeholder='0'
               type='number'
               defaultValue={value}
-              onChange={({ currentTarget }) =>
+              onInput={({ currentTarget }) =>
                 calcAction(calcActions.changeValue, breakpoint, variableName, +currentTarget.value)
-                // calc.changeValue(breakpoint, variableName, +currentTarget.value)
               } />
           </td>)}
         {/* Действие */}

@@ -60,8 +60,6 @@ export default class Calc implements ICalc.ICalc {
     return this
   }
   deleteBreakpoint({ X, Y }: ICalc.breakpoint) {
-    console.log(X, Y);
-    this.breakpoints.forEach(point => console.log(!(point.X === X && point.Y === Y)))
     this.breakpoints = this.breakpoints.filter(point => !(point.X === X && point.Y === Y))
     this.values = this.values.filter(({ breakpoint }) => !(breakpoint.X === X && breakpoint.Y === Y))
     return this
@@ -69,14 +67,12 @@ export default class Calc implements ICalc.ICalc {
 
   //* values
   changeValue({ X, Y }: ICalc.breakpoint, variable: ICalc.variable, newValue: number) {
-    console.log(X, Y, variable, newValue);
     this.values.forEach(value => {
       if (!(value.breakpoint.X === X && value.breakpoint.Y === Y)) return
       value.variables = value.variables.map(old => ({
         variable: old.variable,
         value: old.variable === variable ? newValue : old.value
       }))
-      console.log(value.variables);
     })
     return this
   }

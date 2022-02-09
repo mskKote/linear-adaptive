@@ -1,34 +1,99 @@
 import React from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { breakpoint } from '../../core/ICalc';
+import Calc from '../../core/Calc';
 import styles from "./ResultSection.module.scss"
 
 type Props = {
-  breakpoints: breakpoint[]
+  calc: Calc
 }
 
-//* Bad code, but not so terrible for MVP
-export default ({ breakpoints }: Props) => {
+//*======================== Formula for adaptive by clamp() css function
+function adaptiveByClamp(
+  screenMin: number,
+  screenMax: number,
+  fontMin: number,
+  fontMax: number) {
+  const vw_max = screenMax / 100
+  const vw_min = screenMin / 100
+  const M = (fontMax - fontMin) / (vw_max - vw_min)
+  const N = fontMax - M * vw_max
+  return `clamp(${fontMin}px, ${Math.round(N * 100) / 100}px + ${Math.round(M * 100) / 100}vw, ${fontMax}px);`
+}
+//*======================== 
+function getVariableClamp(
+  name: string,
+  screenMin: number,
+  screenMax: number,
+  fontMin: number,
+  fontMax: number) {
+  if (fontMin === fontMax)
+    return `${name}: ${fontMin}px;`
+  return `${name}: ${adaptiveByClamp(screenMin, screenMax, fontMin, fontMax)}`
+}
 
-  const breakpointsText = [...breakpoints]
-  breakpointsText.sort((a, b) => b.X - a.X) //* Sort by descending
-  let resultCode = ""
-  for (let i = 0; i < breakpointsText.length; i++) {
-    if (breakpointsText.length === 1 || breakpointsText.length === 2) {
-      resultCode = `@media screen and (min-width: ${breakpointsText[0].X + 1}px) {}
-                  \n@media screen and (max-width: ${breakpointsText[0].X}px) {}`
-      break;
+const media_min_width = (min: number) => `@media screen and (min-width: ${min}px)`
+const media_max_width = (max: number) => `@media screen and (max-width: ${max}px)`
+const media_min_max_width = (min: number, max: number) =>
+  `@media screen and (min-width: ${min}px) and (max-width: ${max}px)`
+
+//?------------------ Bad code, but how to refactor it?
+export default ({ calc }: Props) => {
+  const { values } = calc
+  const _values = [...values]
+  const _variablesText: string[] = []
+
+  //*------------------ Sort by descending
+  _values.sort((a, b) => b.breakpoint.X - a.breakpoint.X)
+
+  //*------------------ Create variables on sizes
+  for (let i = 0; i < _values.length - 1; i++) {
+    const breakpointVariables = []
+    for (let j = 0; j < _values[i].variables.length; j++) {
+      const current = _values[i + 1].variables[j];
+      const next = _values[i].variables[j];
+      const screenMin = _values[i + 1].breakpoint.X
+      const screenMax = _values[i].breakpoint.X
+      const fontMin = current.value
+      const fontMax = next.value
+
+      // console.log(screenMin, screenMax, fontMin, fontMax,
+      //   getVariableClamp(current.variable, screenMin, screenMax, fontMin, fontMax))
+      breakpointVariables.push(
+        getVariableClamp(current.variable, screenMin, screenMax, fontMin, fontMax))
     }
+    _variablesText.push("\t" + breakpointVariables.join("\n\t"))
+  }
+  // console.log(_variablesText);
+
+  //* ----------------- Create media queries
+  let resultCode = ""
+  for (let i = 0; i < _values.length; i++) {
+    const get_X = (i: number) => _values[i].breakpoint.X
+    const wrapLine = (value: string, end: boolean = false) =>
+      ` {\n${value}\n}${end ? '' : '\n\n'}`
+
+    // //* Small sizes
+    // if (_values.length === 1 || _values.length === 2) {
+    //   resultCode =
+    //     `${media_min_width(get_X(0) + 1)} {\n}
+    //    \n${media_max_width(get_X(0))} {\n}`
+    //   break;
+    // }
 
     if (i === 0) continue
     if (i === 1)
-      //* The largest one
-      resultCode += `@media screen and (min-width: ${breakpointsText[i].X + 1}px) {}\n\n`
-    else if (i === breakpointsText.length - 1)
-      //* The smallest size
-      resultCode += `@media screen and (max-width: ${breakpointsText[i - 1].X}px) {}`
+      // The largest one
+      resultCode += media_min_width(get_X(i) + 1)
+        + wrapLine(_variablesText[i - 1])
+
+    else if (i === _values.length - 1)
+      // The smallest size
+      resultCode += media_max_width(get_X(i - 1) - 1)
+        + wrapLine(_variablesText[i - 1], true)
+
     else
-      resultCode += `@media screen and (min-width: ${breakpointsText[i].X + 1}px) and (max-width: ${breakpoints[i - 1].X}px) {}\n\n`
+      resultCode += media_min_max_width(get_X(i), get_X(i - 1))
+        + wrapLine(_variablesText[i - 1])
   }
 
   return (<section className={styles.result}>

@@ -14,8 +14,23 @@ const defaultCalc = new Calc()
   .addBreakpoint({ X: 1366, Y: 0 })
   .addBreakpoint({ X: 1920, Y: 0 })
   .addBreakpoint({ X: 3840, Y: 0 })
-  .addVariable("variable-1")
-  .addVariable("variable-2")
+  .addVariable("--variable-1")
+  .addVariable("--variable-2")
+  .changeValue({ X: 375, Y: 0 }, "--variable-1", 25)
+  .changeValue({ X: 667, Y: 0 }, "--variable-1", 25)
+  .changeValue({ X: 834, Y: 0 }, "--variable-1", 26)
+  .changeValue({ X: 1194, Y: 0 }, "--variable-1", 31)
+  .changeValue({ X: 1366, Y: 0 }, "--variable-1", 34)
+  .changeValue({ X: 1920, Y: 0 }, "--variable-1", 48)
+  .changeValue({ X: 3840, Y: 0 }, "--variable-1", 96)
+  .changeValue({ X: 375, Y: 0 }, "--variable-2", 25)
+  .changeValue({ X: 667, Y: 0 }, "--variable-2", 25)
+  .changeValue({ X: 834, Y: 0 }, "--variable-2", 26)
+  .changeValue({ X: 1194, Y: 0 }, "--variable-2", 31)
+  .changeValue({ X: 1366, Y: 0 }, "--variable-2", 34)
+  .changeValue({ X: 1920, Y: 0 }, "--variable-2", 48)
+  .changeValue({ X: 3840, Y: 0 }, "--variable-2", 96)
+
 
 export default () => {
   const [calc, setCalc] = useState(defaultCalc)
@@ -59,7 +74,7 @@ export default () => {
     {/* <button onClick={redraw}>reloads: {reloads}</button> */}
     <main>
       <CalcSection calc={calc} updateCalc={updateCalc} />
-      <ResultSection breakpoints={calc.breakpoints} />
+      <ResultSection calc={calc} />
     </main>
 
     <footer>
