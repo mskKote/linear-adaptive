@@ -15,9 +15,12 @@ function adaptiveByClamp(
   fontMax: number) {
   const vw_max = screenMax / 100
   const vw_min = screenMin / 100
-  const M = (fontMax - fontMin) / (vw_max - vw_min)
-  const N = fontMax - M * vw_max
-  return `clamp(${fontMin}px, ${Math.round(N * 100) / 100}px + ${Math.round(M * 100) / 100}vw, ${fontMax}px);`
+  const VW = (fontMax - fontMin) / (vw_max - vw_min)
+  const PX = fontMax - VW * vw_max
+  return {
+    PX: Math.round(PX * 100) / 100,
+    VW: Math.round(VW * 100) / 100
+  }
 }
 //*======================== 
 function getVariableClamp(
@@ -26,9 +29,21 @@ function getVariableClamp(
   screenMax: number,
   fontMin: number,
   fontMax: number) {
-  if (fontMin === fontMax)
-    return `${name}: ${fontMin}px;`
-  return `${name}: ${adaptiveByClamp(screenMin, screenMax, fontMin, fontMax)}`
+  if (fontMin === fontMax) return `${name}: ${fontMin}px;`
+
+  //* Choose correct varibles for display
+  const displayMin = fontMin > fontMax ? fontMax : fontMin
+  const displayMax = fontMin > fontMax ? fontMin : fontMax
+
+  //* Alghoritm
+  const { PX, VW } = adaptiveByClamp(screenMin, screenMax, fontMin, fontMax)
+
+  //* String processing
+  const px_coeff = `${PX}px + `
+  const adaptSize = (PX !== 0 ? px_coeff : "") + `${VW}vw`;
+  const clamp = `clamp(${displayMin}px, ${adaptSize}, ${displayMax}px);`
+
+  return `${name}: ${clamp}`
 }
 
 const media_min_width = (min: number) => `@media screen and (min-width: ${min}px)`
